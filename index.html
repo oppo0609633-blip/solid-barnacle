@@ -14,7 +14,7 @@ body{
   margin:0;
   min-height:100vh;
   font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#101827,#18233a);
+  background:linear-gradient(135deg,#101827,#18233b);
   color:white;
 }
 
@@ -24,25 +24,33 @@ body{
   padding:35px 0;
 }
 
-h1{
+.header{
   text-align:center;
+  margin-bottom:25px;
+}
+
+.logo{
+  font-size:45px;
+  margin-bottom:8px;
+}
+
+h1{
   margin:0;
-  font-size:36px;
+  font-size:34px;
 }
 
 .subtitle{
-  text-align:center;
-  color:#b9c3d4;
-  margin:10px 0 25px;
+  color:#b8c2d6;
+  margin-top:8px;
 }
 
 .card{
   background:rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:18px;
   padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  margin-bottom:18px;
+  backdrop-filter:blur(10px);
 }
 
 textarea{
@@ -50,44 +58,64 @@ textarea{
   min-height:180px;
   resize:vertical;
   border:0;
-  outline:0;
+  outline:none;
   border-radius:12px;
-  padding:15px;
+  padding:16px;
   font-size:16px;
-  font-family:monospace;
   background:#0b1220;
-  color:#fff;
+  color:white;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:14px;
+  flex-wrap:wrap;
 }
 
 button{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
+  flex:1;
+  min-width:130px;
+  padding:13px 18px;
   border:0;
   border-radius:12px;
-  background:#4f8cff;
-  color:white;
-  font-size:17px;
+  font-size:16px;
   font-weight:bold;
   cursor:pointer;
+  background:#2563eb;
+  color:white;
 }
 
 button:hover{
   opacity:.9;
 }
 
+.clear{
+  background:#dc2626;
+}
+
 .status{
   text-align:center;
-  margin-top:12px;
-  color:#8ff0a4;
-  min-height:20px;
+  margin-top:14px;
+  color:#9fe3b1;
+  min-height:22px;
 }
 
 .footer{
   text-align:center;
-  color:#8792a6;
+  color:#8995aa;
   margin-top:25px;
   font-size:14px;
+}
+
+@media(max-width:600px){
+  h1{
+    font-size:28px;
+  }
+
+  .container{
+    padding:25px 0;
+  }
 }
 </style>
 </head>
@@ -96,61 +124,21 @@ button:hover{
 
 <div class="container">
 
-  <h1>📋 Copy Hub</h1>
-  <div class="subtitle">
-    เว็บไซต์สำหรับเก็บและคัดลอกข้อความ
+  <div class="header">
+    <div class="logo">📋</div>
+    <h1>Copy Hub</h1>
+    <div class="subtitle">เว็บไซต์คัดลอกข้อความง่าย ๆ</div>
   </div>
 
   <div class="card">
-    <h2>ข้อความที่ต้องการคัดลอก</h2>
 
     <textarea id="textBox"
-      placeholder="พิมพ์หรือวางข้อความของคุณที่นี่..."></textarea>
+      placeholder="พิมพ์หรือวางข้อความที่นี่..."></textarea>
 
-    <button onclick="copyText()">
-      📋 คัดลอกข้อความ
-    </button>
+    <div class="buttons">
+      <button onclick="copyText()">📋 คัดลอก</button>
+      <button onclick="pasteText()">📥 วาง</button>
+      <button class="clear" onclick="clearText()">🗑️ ล้าง</button>
+    </div>
 
-    <div class="status" id="status"></div>
-  </div>
-
-  <div class="card">
-    <h2>วิธีใช้งาน</h2>
-    <p>1. ใส่ข้อความลงในช่องด้านบน</p>
-    <p>2. กดปุ่ม “คัดลอกข้อความ”</p>
-    <p>3. นำข้อความไปวางได้ทันที</p>
-  </div>
-
-  <div class="footer">
-    Copy Hub © 2026
-  </div>
-
-</div>
-
-<script>
-function copyText(){
-
-  const box = document.getElementById("textBox");
-  const status = document.getElementById("status");
-
-  if(!box.value.trim()){
-    status.textContent = "⚠️ กรุณาใส่ข้อความก่อน";
-    return;
-  }
-
-  navigator.clipboard.writeText(box.value)
-    .then(function(){
-      status.textContent = "✅ คัดลอกข้อความแล้ว!";
-    })
-    .catch(function(){
-
-      box.select();
-      document.execCommand("copy");
-
-      status.textContent = "✅ คัดลอกข้อความแล้ว!";
-    });
-}
-</script>
-
-</body>
-</html>
+    <div class="status" id="status"></div
