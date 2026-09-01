@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Copy Hub</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #101827, #18233a);
+      color: white;
+    }
+
+    .container {
+      width: min(900px, 92%);
+      margin: auto;
+      padding: 35px 0;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+
+    .subtitle {
+      color: #b9c4d6;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(10px);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      resize: vertical;
+      border: none;
+      outline: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 16px;
+      background: #0b1220;
+      color: white;
+      border: 1px solid #34445f;
+    }
+
+    textarea:focus {
+      border-color: #5b9cff;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    button {
+      flex: 1;
+      min-width: 130px;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: white;
+      background: #2878ff;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .clear {
+      background: #e34b5f;
+    }
+
+    .count {
+      color: #aebbd0;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .items {
+      margin-top: 10px;
+    }
+
+    .item {
+      background: #0b1220;
+      border: 1px solid #34445f;
+      border-radius: 14px;
+      padding: 15px;
+      margin-top: 12px;
+    }
+
+    .item-text {
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #e7edf7;
+      margin-bottom: 12px;
+    }
+
+    .small-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .small-buttons button {
+      min-width: 0;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    .delete {
+      background: #555f73;
+    }
+
+    .footer {
+      text-align: center;
+      color: #8290a8;
+      margin-top: 30px;
+      font-size: 14px;
+    }
+
+    .message {
+      position: fixed;
+      left: 50%;
+      bottom: 25px;
+      transform: translateX(-50%);
+      background: #20a464;
+      padding: 13px 22px;
+      border-radius: 30px;
+      font-weight: bold;
+      display: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 25px 0;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .logo {
+        font-size: 40px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+
+      textarea {
+        min-height: 190px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <div class="logo">📋</div>
+      <h1>Copy Hub</h1>
+      <div class="subtitle">เว็บเก็บข้อความและคัดลอกได้ง่าย</div>
+    </div>
+
+    <div class="card">
+      <label for="textInput">📝 ข้อความของคุณ</label>
+
+      <textarea
+        id="textInput"
+        placeholder="พิมพ์หรือวางข้อความที่ต้องการเก็บไว้ที่นี่..."
+      ></textarea>
+
+      <div class="buttons">
+        <button onclick="copyText()">📋 คัดลอก</button>
+        <button onclick="saveText()">💾 บันทึก</button>
+        <button class="clear" onclick="clearText()">🗑️ ล้าง</button>
+      </div>
+
+      <div class="count" id="count">
+        0 ตัวอักษร
+      </div>
+    </div>
+
+    <div class="card">
+      <label>📚 ข้อความที่บันทึกไว้</label>
+
+      <div id="savedItems" class="items">
+        <div style="color:#8290a8;">
+          ยังไม่มีข้อความที่บันทึก
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Copy Hub • ใช้งานได้ฟรี
+    </div>
+
+  </div>
+
+  <div id="message" class="message">
+    คัดลอกแล้ว ✓
+  </div>
+
+  <script>
+    const textInput = document.getElementById("textInput");
+    const count = document.getElementById("count");
+    const savedItems = document.getElementById("savedItems");
+    const message = document.getElementById("message");
+
+    let savedTexts = JSON.parse(
+      localStorage.getItem("copyHubTexts") || "[]"
+    );
+
+    textInput.addEventListener("input", function() {
+      count.textContent = textInput.value.length + " ตัวอักษร";
+    });
+
+    function showMessage(text) {
+      message.textContent = text;
+      message.style.display = "block";
+
+      setTimeout(function() {
+        message.style.display = "none";
+      }, 1800);
+    }
+
+    async function copyText() {
+      const text = textInput.value;
+
+      if (!text.trim()) {
+        showMessage("ยังไม่มีข้อความให้คัดลอก");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showMessage("คัดลอกแล้ว ✓");
+      } catch (error) {
+        textInput.select();
+        document.execCommand("copy");
+        showMessage("คัดลอกแล้ว ✓");
+      }
+    }
+
+    function saveText() {
+      const text = textInput.value.trim();
+
+      if (!text) {
+        showMessage("กรุณาใส่ข้อความก่อน");
+        return;
+      }
+
+      savedTexts.unshift(text);
+
+      localStorage.setItem(
+        "copyHubTexts",
+        JSON.stringify(savedTexts)
+      );
+
+      renderSaved();
+      showMessage("บันทึกแล้ว ✓");
+    }
+
+    function clearText() {
+      textInput.value = "";
+      count.textContent = "0 ตัวอักษร";
+      showMessage("ล้างแล้ว");
+    }
+
+    function copySaved(index) {
+      navigator.clipboard.writeText(savedTexts[index])
+        .then(function() {
+          showMessage("คัดลอกแล้ว ✓");
+        })
+        .catch(function() {
+          showMessage("ไม่สามารถคัดลอกได้");
+        });
+    }
+
+    function deleteSaved(index) {
+      savedTexts.splice(index, 1);
+
+      localStorage.setItem(
+        "copyHubTexts",
+        JSON.stringify(savedTexts)
+      );
+
+      renderSaved();
+      showMessage("ลบแล้ว");
+    }
+
+    function useSaved(index) {
+      textInput.value = savedTexts[index];
+      count.textContent =
+        textInput.value.length + " ตัวอักษร";
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+      showMessage("นำข้อความมาใช้แล้ว");
+    }
+
+    function renderSaved() {
+      if (savedTexts.length === 0) {
+        savedItems.innerHTML =
+          '<div style="color:#8290a8;">ยังไม่มีข้อความที่บันทึก</div>';
+        return;
+      }
+
+      savedItems.innerHTML = "";
+
+      savedTexts.forEach(function(text, index) {
+
+        const item = document.createElement("div");
+        item.className = "item";
+
+        const textDiv = document.createElement("div");
+        textDiv.className = "item-text";
+        textDiv.textContent = text;
+
+        const buttons = document.createElement("div");
+        buttons.className = "small-buttons";
+
+        const copyButton = document.createElement("button");
+        copyButton.textContent = "📋 คัดลอก";
+        copyButton.onclick = function() {
+          copySaved(index);
+        };
+
+        const useButton = document.createElement("button");
+        useButton.textContent = "✏️ ใช้";
+        useButton.onclick = function() {
+          useSaved(index);
+        };
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "🗑️ ลบ";
+        deleteButton.className = "delete";
+        deleteButton.onclick = function() {
+          deleteSaved(index);
+        };
+
+        buttons.appendChild(copyButton);
+        buttons.appendChild(useButton);
+        buttons.appendChild(deleteButton);
+
+        item.appendChild(textDiv);
+        item.appendChild(buttons);
+
+        savedItems.appendChild(item);
+      });
+    }
+
+    renderSaved();
+  </script>
+
+</body>
+</html>
